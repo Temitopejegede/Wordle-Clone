@@ -2,11 +2,22 @@ const titleDisplay = document.querySelector(".tile-container");
 const keyboard = document.querySelector(".key-container");
 const messageDisplay = document.querySelector(".message-container");
 
-const wordle = "SUPER";
+let wordle;
 
-const getWordle = () =>{
-    
-}
+const getWordle = () => {
+  fetch("http://localhost:8000/word")
+    .then((response) => response.json())
+    .then((json) => {
+      console.log(json);
+      wordle = json.toUpperCase();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+getWordle();
+
 const keys = [
   "Q",
   "W",
@@ -116,7 +127,13 @@ const deleteLetter = () => {
 
 const checkRow = (row) => {
   const guess = guessRows[currentRow].join("");
+
   if (currentTile > 4) {
+    // fetch(`http://localhost:8000/check/?word=${guess}`)
+    //   .then((response) => response.json())
+    //   .then((json) => {
+    //     console.log(json);
+    //   });
     console.log("guess is " + guess, "wordle is " + wordle);
     flipTile();
     if (wordle == guess) {
@@ -179,20 +196,20 @@ const flipTile = () => {
     }, 500 * index);
   });
 
-  //   rowTiles.forEach((tile, index) => {
-  //     const dataLetter = tile.getAttribute("data");
-  //     setTimeout(() => {
-  //       tile.classList.add("flip");
-  //       if (dataLetter == wordle[index]) {
-  //         tile.classList.add("green-overlay");
-  //         addColorToKey(dataLetter, "green-overlay");
-  //       } else if (wordle.includes(dataLetter)) {
-  //         tile.classList.add("yellow-overlay");
-  //         addColorToKey(dataLetter, "yellow-overlay");
-  //       } else {
-  //         tile.classList.add("grey-overlay");
-  //         addColorToKey(dataLetter, "grey-overlay");
-  //       }
-  //     }, 500 * index);
-  //   });
+  rowTiles.forEach((tile, index) => {
+    const dataLetter = tile.getAttribute("data");
+    setTimeout(() => {
+      tile.classList.add("flip");
+      if (dataLetter == wordle[index]) {
+        tile.classList.add("green-overlay");
+        addColorToKey(dataLetter, "green-overlay");
+      } else if (wordle.includes(dataLetter)) {
+        tile.classList.add("yellow-overlay");
+        addColorToKey(dataLetter, "yellow-overlay");
+      } else {
+        tile.classList.add("grey-overlay");
+        addColorToKey(dataLetter, "grey-overlay");
+      }
+    }, 500 * index);
+  });
 };
